@@ -1,85 +1,73 @@
 import java.io.*;
+import java.util.Scanner;
 
 public class PracticeProblem {
-
     public static void main(String[] args) {
         String file = "file.txt";
+
         System.out.println(getName(2, file));
         System.out.println(getAge(3, file));
         System.out.println(getNumber(1, file));
-        fileAppend("Kyler 17 123456890", file);
+
+        fileAppend("Kyler 17 100000", file);
     }
 
     public static String getName(int line, String file) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String text;
-            int count = 0;
-            while ((text = br.readLine()) != null) {
-                count++;
+            Scanner sc = new Scanner(new File(file));
+            int count = 1;
+            while (sc.hasNextLine()) {
+                String[] parts = sc.nextLine().split(" ");
                 if (count == line) {
-                    String[] parts = text.split(" ");
-                    br.close();
-                    if (parts.length >= 2)
-                        return parts[0] + " " + parts[1];
+                    sc.close();
+                    return parts[0] + " " + parts[1];
                 }
+                count++;
             }
-            br.close();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+            sc.close();
+        } catch (Exception e) {}
         return "";
     }
 
     public static int getAge(int line, String file) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String text;
-            int count = 0;
-            while ((text = br.readLine()) != null) {
-                count++;
+            Scanner sc = new Scanner(new File(file));
+            int count = 1;
+            while (sc.hasNextLine()) {
+                String[] parts = sc.nextLine().split(" ");
                 if (count == line) {
-                    String[] parts = text.split(" ");
-                    br.close();
-                    if (parts.length >= 3)
-                        return Integer.parseInt(parts[2]);
+                    sc.close();
+                    return Integer.parseInt(parts[2]);
                 }
+                count++;
             }
-            br.close();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+            sc.close();
+        } catch (Exception e) {}
         return -1;
     }
 
-    public static long getNumber(int line, String file) {
+    public static int getNumber(int line, String file) {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            String text;
-            int count = 0;
-            while ((text = br.readLine()) != null) {
-                count++;
+            Scanner sc = new Scanner(new File(file));
+            int count = 1;
+            while (sc.hasNextLine()) {
+                String[] parts = sc.nextLine().split(" ");
                 if (count == line) {
-                    String[] parts = text.split(" ");
-                    br.close();
-                    if (parts.length >= 4)
-                        return Long.parseLong(parts[3]);
+                    sc.close();
+                    return Integer.parseInt(parts[3]);
                 }
+                count++;
             }
-            br.close();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+            sc.close();
+        } catch (Exception e) {}
         return -1;
     }
 
-    public static void fileAppend(String output, String filename) {
+    public static void fileAppend(String output, String file) {
         try {
-            PrintWriter pw = new PrintWriter(new FileWriter(filename, true));
+            PrintWriter pw = new PrintWriter(new FileWriter(file, true));
             pw.println(output);
             pw.close();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+        } catch (Exception e) {}
     }
 }
