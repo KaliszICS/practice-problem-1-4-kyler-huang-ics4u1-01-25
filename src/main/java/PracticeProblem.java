@@ -1,73 +1,78 @@
 import java.io.*;
-import java.util.Scanner;
+import java.util.*;
 
 public class PracticeProblem {
-    public static void main(String[] args) {
-        String file = "file.txt";
 
-        System.out.println(getName(2, file));
-        System.out.println(getAge(3, file));
-        System.out.println(getNumber(1, file));
-
-        fileAppend("Kyler 17 100000", file);
-    }
-
+    // Returns the name on the given line, or "" if line does not exist
     public static String getName(int line, String file) {
         try {
-            Scanner sc = new Scanner(new File(file));
-            int count = 1;
-            while (sc.hasNextLine()) {
-                String[] parts = sc.nextLine().split(" ");
-                if (count == line) {
-                    sc.close();
-                    return parts[0] + " " + parts[1];
-                }
-                count++;
+            List<String> lines = readFile(file);
+            if (line <= 0 || line > lines.size()) {
+                return "";
             }
-            sc.close();
-        } catch (Exception e) {}
-        return "";
+
+            String[] parts = lines.get(line - 1).split("\\s+");
+            if (parts.length < 3) return "";
+
+            // Combine first and last name
+            return parts[0] + " " + parts[1];
+        } catch (IOException e) {
+            return "";
+        }
     }
 
+    // Returns the age on the given line, or -1 if line does not exist
     public static int getAge(int line, String file) {
         try {
-            Scanner sc = new Scanner(new File(file));
-            int count = 1;
-            while (sc.hasNextLine()) {
-                String[] parts = sc.nextLine().split(" ");
-                if (count == line) {
-                    sc.close();
-                    return Integer.parseInt(parts[2]);
-                }
-                count++;
+            List<String> lines = readFile(file);
+            if (line <= 0 || line > lines.size()) {
+                return -1;
             }
-            sc.close();
-        } catch (Exception e) {}
-        return -1;
+
+            String[] parts = lines.get(line - 1).split("\\s+");
+            if (parts.length < 3) return -1;
+
+            return Integer.parseInt(parts[2]);
+        } catch (IOException | NumberFormatException e) {
+            return -1;
+        }
     }
 
+    // Returns the student number on the given line, or -1 if line does not exist
     public static int getNumber(int line, String file) {
         try {
-            Scanner sc = new Scanner(new File(file));
-            int count = 1;
-            while (sc.hasNextLine()) {
-                String[] parts = sc.nextLine().split(" ");
-                if (count == line) {
-                    sc.close();
-                    return Integer.parseInt(parts[3]);
-                }
-                count++;
+            List<String> lines = readFile(file);
+            if (line <= 0 || line > lines.size()) {
+                return -1;
             }
-            sc.close();
-        } catch (Exception e) {}
-        return -1;
+
+            String[] parts = lines.get(line - 1).split("\\s+");
+            if (parts.length < 4) return -1;
+
+            return Integer.parseInt(parts[3]);
+        } catch (IOException | NumberFormatException e) {
+            return -1;
+        }
     }
 
-    public static void fileAppend(String output, String file) {
-        try {
-            PrintWriter pw = new PrintWriter(new FileWriter(file, true));
-            pw.println(output);
-            pw.close();
-        } catch (Exception e) {}
+    // Appends a given string to the file (no newline), returns nothing
+    public static void fileAppend(String output, String filename) {
+        try (FileWriter fw = new FileWriter(filename, true)) {
+            fw.write(output);
+        } catch (IOException e) {
+            // Do nothing, tests don't require throwing exceptions
+        }
+    }
+
+    // Helper method to read all lines safely
+    private static List<String> readFile(String filename) throws IOException {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                lines.add(line.trim());
+            }
+        }
+        return lines;
     }
 }
